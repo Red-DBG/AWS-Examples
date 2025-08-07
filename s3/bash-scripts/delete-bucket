@@ -1,1 +1,28 @@
 #!/usr/bin/env bash
+
+echo "=== delete bucket"
+
+# Check for bucket name
+if [ -z "$1" ]; then
+    echo "There needs to be a bucket name eg. ./bucket my-bucekt-name"
+    exit 1
+fi
+
+# Set region (default to ap-southeast-2 if not provided)
+REGION=$(aws configure get region)
+if [ -z "$REGION" ]; then
+    REGION="ap-southeast-2"
+fi
+
+# If region is us-east-1, omit LocationConstraint (AWS rule)
+# New to me the LocationConstraint
+if [ "$REGION" = "us-east-1" ]; then
+    aws s3api delete-bucket --bucket "$1" --region "$REGION"
+else
+    aws s3api delete-bucket \
+        --bucket "$1" \
+        --region "$REGION" 
+        #--delete-bucket-configuration LocationConstraint="$REGION" \
+        #--query Location \
+        #--output text
+fi

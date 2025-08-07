@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-echo "=== sync object"
+echo "=== sync objects"
 
 # exit immediately if any command returns a non-zero status
 set -e
@@ -11,9 +11,9 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-# Check for bucket name
+# Check for filename prefix
 if [ -z "$2" ]; then
-    echo "There needs to be a bucket name eg. ./bucket my-bucekt-name"
+    echo "There needs to be a filename prefix eg. ./bucket my-bucket-name my-filename"
     exit 1
 fi
 
@@ -32,10 +32,10 @@ mkdir -p "$OUTPUT_DIR"
 NUM_FILES=$((RANDOM % 6 + 5))
 
 for ((i=1; i<=NUM_FILES; i++)); do
-    FILENAME="$OUTPUT_DIR/$FILENAME_PREFIX_$i.txt"
+    FILENAME="$OUTPUT_DIR/${FILENAME_PREFIX}_$i.txt"
     dd if=/dev/urandom of="$FILENAME" bs=1024 count=$((RANDOM % 1024 + 1)) 2>/dev/null
 done
 
 echo "Created $NUM_FILES files in $OUTPUT_DIR"
 
-aws s3 sync $OUTPUT_DIR s3://$BUCKET_NAME/files
+aws s3 sync $OUTPUT_DIR s3://$BUCKET_NAME/$FILENAME_PREFIX

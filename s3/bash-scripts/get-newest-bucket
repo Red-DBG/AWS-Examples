@@ -4,5 +4,4 @@ echo "=== newest bucket"
 # aws s3api list-buckets
 
 # aws s3 ls
-aws s3api list-buckets | jq -r '.Buckets | sort_by(.CreationDate) | reverse | .[0:1] | .[] | .Name'
-echo "..."
+aws s3api list-buckets | jq -r '.Buckets | sort_by(.CreationDate) | reverse | .[0] | .Name'

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+echo "=== utils setup ==="
+
+# tree on Git Bash
+if ! command -v tree &> /dev/null; then
+    echo "Installing tree..."
+    # Git Bash doesn't have apt-get, but if you have pacman (Git for Windows SDK) you can do:
+    # pacman -S tree
+    echo "Please install tree manually if pacman is not available."
+else
+    echo "tree is already installed."
+fi
+
+# AWS CLI auto prompt
+export AWS_CLI_AUTO_PROMPT=on-partial
+
+# Change to workspace
+cd "/d/AWS\ Cert\ Training/AWS\ Examples/AWS-Examples" || {
+    echo "Could not change directory."
+    exit 1
+}
+
+echo "Ready."

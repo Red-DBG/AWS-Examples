@@ -2,11 +2,29 @@
 
 echo "=== utils setup ==="
 
+# Function to download and extract zip to Program Files
+install_tool() {
+    local name=$1
+    local url=$2
+    local folder=$3
+
+    if ! command -v "$name" &> /dev/null; then
+        echo "Installing $name..."
+        tmp_zip="/tmp/${name}.zip"
+        curl -L -o "$tmp_zip" "$url"
+        mkdir -p "$folder"
+        unzip -o "$tmp_zip" -d "$folder"
+        rm "$tmp_zip"
+        echo "$name installed to $folder"
+        echo "⚠ Please add '$folder' to your Windows PATH (System Environment Variables)."
+    else
+        echo "$name is already installed."
+    fi
+}
+
 # tree on Git Bash
 if ! command -v tree &> /dev/null; then
     echo "Installing tree..."
-    # Git Bash doesn't have apt-get, but if you have pacman (Git for Windows SDK) you can do:
-    # pacman -S tree
     echo "Please install tree manually if pacman is not available."
 else
     echo "tree is already installed."
@@ -15,10 +33,20 @@ fi
 # AWS CLI auto prompt
 export AWS_CLI_AUTO_PROMPT=on-partial
 
+# Install Terraform (Windows AMD64 latest stable)
+install_tool "terraform" \
+    "https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_windows_amd64.zip" \
+    "/c/Program Files/Terraform"
+
+# Install jq (Windows AMD64 latest)
+install_tool "jq" \
+    "https://github.com/stedolan/jq/releases/download/jq-1.7.1/jq-win64.exe" \
+    "/c/Program Files/jq"
+
 # Change to workspace
-cd "/d/AWS\ Cert\ Training/AWS\ Examples/AWS-Examples" || {
+cd "/d/AWS Cert Training/AWS Examples/AWS-Examples" || {
     echo "Could not change directory."
     exit 1
 }
 
-echo "Ready."
+echo "=== Setup complete ==="

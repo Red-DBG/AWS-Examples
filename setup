@@ -50,3 +50,9 @@ cd "/d/AWS Cert Training/AWS Examples/AWS-Examples" || {
 }
 
 echo "=== Setup complete ==="
+
+
+# on Terrafrom:
+# do the bash: terraform plan
+# do the bash: terraform apply
+# do the bash: terraform destroy -- to delete

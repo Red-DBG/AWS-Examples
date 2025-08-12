@@ -2,7 +2,7 @@
 
 echo "=== utils setup ==="
 
-# Function to download and extract zip to Program Files
+# Function to download and extract zip to Program Files (Windows) or to a folder (Linux)
 install_tool() {
     local name=$1
     local url=$2
@@ -17,16 +17,16 @@ install_tool() {
         unzip -o "$tmp_zip" -d "$folder"
         rm "$tmp_zip"
         echo "$name installed to $folder"
-        echo "Please add '$folder' to your Windows PATH (System Environment Variables)."
+        echo "Please add '$folder' to your PATH."
     else
         echo "$name is already installed."
     fi
 }
 
-# tree on Git Bash
+# tree on Git Bash / WSL
 if ! command -v tree &> /dev/null; then
     echo "Installing tree..."
-    echo "Please install tree manually if pacman is not available."
+    echo "Please install tree manually if pacman/apt is not available."
 else
     echo "tree is already installed."
 fi
@@ -68,6 +68,17 @@ else
     echo "npm not found — please check if Node.js was added to your PATH."
 fi
 
+# -- PULUMI installation for WSL/Linux --
+
+if ! command -v pulumi &> /dev/null; then
+    echo "Installing Pulumi CLI for WSL/Linux..."
+    curl -fsSL https://get.pulumi.com | sh
+    echo "Pulumi installed! Please restart your shell or run:"
+    echo 'export PATH=$PATH:$HOME/.pulumi/bin'
+else
+    echo "Pulumi CLI is already installed."
+fi
+
 # Change to workspace
 cd "/d/AWS Cert Training/AWS Examples/AWS-Examples" || {
     echo "Could not change directory."
@@ -76,13 +87,17 @@ cd "/d/AWS Cert Training/AWS Examples/AWS-Examples" || {
 
 echo "=== Setup complete ==="
 
-
-
-# on Terrafrom:
-# do the bash: terraform plan
-# do the bash: terraform apply
-# do the bash: terraform destroy -- to delete
-
-# AWS CDK
-# do the cdk bootstrap aws://<ACCOUNT_ID>/<REGION> before deploying the stack i.e. cdk deploy to create S3 Bucket
- 
+# Notes:
+# Terraform:
+#   terraform plan
+#   terraform apply
+#   terraform destroy
+#
+# AWS CDK:
+#   cdk bootstrap aws://<ACCOUNT_ID>/<REGION>
+#   cdk deploy
+#
+# Pulumi:
+#   pulumi stack init <stack-name> (if needed)
+#   pulumi up
+#   pulumi destroy

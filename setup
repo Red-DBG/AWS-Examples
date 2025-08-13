@@ -26,7 +26,11 @@ install_tool() {
 # tree on Git Bash / WSL
 if ! command -v tree &> /dev/null; then
     echo "Installing tree..."
-    echo "Please install tree manually if pacman/apt is not available."
+    if command -v apt &> /dev/null; then
+        sudo apt update && sudo apt install -y tree
+    else
+        echo "Please install tree manually if pacman/apt is not available."
+    fi
 else
     echo "tree is already installed."
 fi
@@ -68,8 +72,7 @@ else
     echo "npm not found — please check if Node.js was added to your PATH."
 fi
 
-# -- PULUMI installation for WSL/Linux --
-
+# -- Pulumi installation for WSL/Linux --
 if ! command -v pulumi &> /dev/null; then
     echo "Installing Pulumi CLI for WSL/Linux..."
     curl -fsSL https://get.pulumi.com | sh
@@ -77,6 +80,18 @@ if ! command -v pulumi &> /dev/null; then
     echo 'export PATH=$PATH:$HOME/.pulumi/bin'
 else
     echo "Pulumi CLI is already installed."
+fi
+
+# -- CRC32 installation for WSL/Linux --
+if grep -qi microsoft /proc/version &>/dev/null; then
+    if ! command -v crc32 &> /dev/null; then
+        echo "Installing CRC32 tool for WSL..."
+        sudo apt update && sudo apt install -y libarchive-zip-perl coreutils
+        echo "CRC32 installed. Example usage:"
+        echo '  crc32 myfile.txt | xxd -r -p | base64'
+    else
+        echo "CRC32 is already installed."
+    fi
 fi
 
 # Change to workspace
@@ -101,3 +116,12 @@ echo "=== Setup complete ==="
 #   pulumi stack init <stack-name> (if needed)
 #   pulumi up
 #   pulumi destroy
+#
+# S3 CRC32 Upload:
+#   CRC32_BASE64=$(crc32 myfile.txt | xxd -r -p | base64)
+#   aws s3api put-object \
+#     --bucket <bucket-name> \
+#     --key myfile.txt \
+#     --body myfile.txt \
+#     --checksum-algorithm CRC32 \
+#     --checksum-crc32 "$CRC32_BASE64"

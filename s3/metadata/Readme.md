@@ -18,7 +18,7 @@ aws s3api put-object \
   --bucket metadata-examamples-red-1234 \
   --key myfile.txt \
   --body ./myfile.txt \
-  --metadata hello=metadata owner=red
+  --metadata hello=metadata,owner=red
 '''
 
 ## Get Object's Metadata

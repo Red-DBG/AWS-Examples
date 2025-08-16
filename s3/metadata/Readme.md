@@ -26,3 +26,13 @@ aws s3api put-object \
 aws s3api head-object --bucket metadata-examamples-red-1234 --key "myfile.txt"
 
 '''
+
+## Clean up bucket and objects
+
+'''sh
+aws s3 rm s://metadata-examamples-red-1234/myfile.txt
+aws s3 rm s://metadata-examamples-red-1234/myfile002.txt
+aws s3 rm s://metadata-examamples-red-1234/myfile003.txt
+aws s3 rb s://metadata-examamples-red-1234
+
+'''

@@ -1,0 +1,19 @@
+{
+   "Statement": [
+      {
+         "Effect": "Allow",
+         "Principal": {
+            "AWS": "arn:aws:iam::682075773203:user/lambda-deploy"
+         },
+         "Action": [
+            "s3:ListBucket",
+            "s3:GetObject",
+            "s3:PutObject"
+         ],
+         "Resource": [
+            "arn:aws:s3:::bucket-policy-examples-red-1234",
+            "arn:aws:s3:::bucket-policy-examples-red-1234/*"
+         ]
+      }
+   ]
+}
